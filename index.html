@@ -1,34 +1,48 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>My first Babylon Project</title>
-        <style>
-            #canvas{
-                width: 100%;
-                height: 100%;
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdn.babylonjs.com/babylon.js"></script>
+
+    <style>
+        #canvas {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+    <!-- step 1: create a canvas + change its height and width -->
+    <canvas id="canvas"></canvas>
+    <!-- step 2: create scene + camera + render/runloop -->
+    <script>
+        // javascript DOM event listener  
+        window.addEventListener('DOMContentLoaded', function () {
+            var canvas = document.getElementById('canvas');
+            // create babylon engine; parameters: defines the canvas/WebGL context used for rendering, adapt to device ratio
+            var engine = new BABYLON.Engine(canvas, true);
+            // create a function to create a new scene
+            var createScene = function () {
+                // create new scene; parameters: defines the engine to use to render this scene
+                var scene = new BABYLON.Scene(engine);
+                scene.clearColor = new BABYLON.Color3.White();              // change default scene color
+                // create main camera; parameters: name of camera, start position of camera, scene the camera belongs to
+                var camera = new BABYLON.FreeCamera('camera1', new BABYLON.
+                Vector3(0, 6, -10), scene);
+                camera.setTarget(BABYLON.Vector3.Zero());                   // defines the target the camera should look at
+                // create first model using mesh; parameters: name of model, size of each box size, scene the model belongs to
+                var box = BABYLON.Mesh.CreateBox("Box", 4.0, scene);
+                // return !!
+                return scene;
             }
-        </style>
-    </head>
-    <body>
-        <canvas id="canvas"></canvas>
-        <script>
-            window.addEventListener("DOMContentLoaded", function(){
-                var canvas = document.getElementById("canvas");
-                var engine = new BABYLON.Engine(canvas,true);
-                var createScene = function(){
-                    var scene = new BABYLON.Scene(engine);
-                    scene.clearColor = new BABYLON.Color3.White();
-                    var camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0,0,-10), scene);
-                    camera.setTarget(BABYLON.Vector3.Zero());
-                    var box = BABYLON.Mesh.CreateBox("Box", 4.0, scene);
-                    return scene;
-                }
-                var scene = createScene();
-                engine.runRenderLoop(function(){
-                    scene.render();
-                });
-            })
-        </script>
-    </body>
+            
+            var scene = createScene();
+            // run scene in engine; parameters: a function!
+            engine.runRenderLoop(function () {
+                scene.render();
+            });
+        });
+    </script>
+</body>
 </html>
