@@ -20,26 +20,84 @@
         // javascript DOM event listener  
         window.addEventListener('DOMContentLoaded', function () {
             var canvas = document.getElementById('canvas');
+
             // create babylon engine; parameters: defines the canvas/WebGL context used for rendering, adapt to device ratio
             var engine = new BABYLON.Engine(canvas, true);
+            
             // create a function to create a new scene
             var createScene = function () {
+                
                 // create new scene; parameters: defines the engine to use to render this scene
                 var scene = new BABYLON.Scene(engine);
                 scene.clearColor = new BABYLON.Color3.White();              // change default scene color
-                // create main camera; parameters: name of camera, start position of camera, scene the camera belongs to
-                var camera = new BABYLON.FreeCamera('camera1', new BABYLON.
-                Vector3(0, 6, -10), scene);
-                camera.setTarget(BABYLON.Vector3.Zero());                   // defines the target the camera should look at
+
                 // create first model using mesh; parameters: name of model, size of each box size, scene the model belongs to
                 var box = BABYLON.Mesh.CreateBox("Box", 4.0, scene);
+
+                // create second model to have camera follow it
+                var box2 = BABYLON.Mesh.CreateBox("Box2", 4.0, scene);
+                var material = new BABYLON.StandardMaterial("wireFrame", scene);
+                material.wireframe = true;
+                box2.material = material;
+                box2.position = new BABYLON.Vector3(0,5,0);
+
+                
+                // create main camera (orbit freely); parameters: name of camera, start position of camera, scene the camera belongs to
+                // var camera = new BABYLON.FreeCamera('camera1', new BABYLON.
+                // Vector3(0, 6, -10), scene);
+                // camera.setTarget(BABYLON.Vector3.Zero());                   // defines the target the camera should look at
+                // camera.attachControl(canvas,true);                          // camera will be able to receive user input
+                // camera.keysUp.push(87);                                     // ASCII for W
+                // camera.keysDown.push(83);
+                // camera.keysLeft.push(65);
+                // camera.keysRight.push(68);
+
+                // create main camera (orbit an object); 
+                // var camera = new BABYLON.ArcRotateCamera("arcCamera", BABYLON.Tools.ToRadians(45), BABYLON.Tools.ToRadians(45), 10.0, box.position, scene);
+                // camera.attachControl(canvas,true);                              // camera will be able to receive user input
+                
+                // create main camera (follow cam)
+                var camera = new BABYLON.FollowCamera("followCam", BABYLON.Vector3.Zero(), scene, box);
+                camera.radius = 10;
+                camera.heightOffset = 1;
+                camera.attachControl(canvas,true);
+
+                // create point light
+                // var light = new BABYLON.PointLight("pointLight", new BABYLON.Vector3(5,10,0), scene);
+                // light.diffuse = new BABYLON.Color3(1,0,0);
+
+
+                scene.actionManager = new BABYLON.ActionManager(scene);             // listen to user input
+                scene.actionManager.registerAction(
+                    new BABYLON.ExecuteCodeAction({ trigger: BABYLON.ActionManager.OnKeyUpTrigger, paramater: " "},
+                    function(){
+                        
+                        scene.getMeshByName("Box").position.x += 0.1;
+                        // light.setEnabled(!light.isEnabled());
+                    })
+                );
+
+                // create spot light
+                // var light = new BABYLON.SpotLight("spotlight", new BABYLON.Vector3(0,10,0), new BABYLON.Vector3(0,-1,0), BABYLON.Tools.ToRadians(45), 0.1, );
+
+
                 // return !!
                 return scene;
             }
             
             var scene = createScene();
+            
             // run scene in engine; parameters: a function!
             engine.runRenderLoop(function () {
+                // scene.getMeshByName("Box").position.z += 0.01;
+                
+                // var light = scene.getLightByName("pointLight");
+                // light.diffuse.g += 0.01;
+                // light.diffuse.b += 0.01;
+
+                // var light = scene.getLightByName("spotlight");
+                // light.position.y -= 0.01;
+                // light.diffuse.r += 0.01;
                 scene.render();
             });
         });
