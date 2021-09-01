@@ -122,9 +122,50 @@
         const createScene = function(){
             const scene = new BABYLON.Scene(engine);
             
-            BABYLON.MeshBuilder.CreateBox("box", {size: 1.5});
+            const box = BABYLON.MeshBuilder.CreateBox("box", {size: 5});
+            box.position = new BABYLON.Vector3(-10, 2.5, 10);
+            // scene.actionManager = new BABYLON.ActionManager(scene);             // listen to user input
+            //     scene.actionManager.registerAction(
+            //         new BABYLON.ExecuteCodeAction({ trigger: BABYLON.ActionManager.OnKeyUpTrigger, paramater: " "},
+            //         function(){
+                        
+            //             scene.getMeshByName("box").rotation.x += BABYLON.Tools.ToRadians(45);
+            //             // light.setEnabled(!light.isEnabled());
+            //         })
+            //     );
+            // const sound = new BABYLON.Sound('sound', '<url to sound>', scene);
+            // sound.play();
+            const box2 = BABYLON.MeshBuilder.CreateBox('box2', {size:5});
+            box2.position = new BABYLON.Vector3(0, 2.5, 10);
+
+            const box3 = BABYLON.MeshBuilder.CreateBox('box3', {size:5});
+            box3.position = new BABYLON.Vector3(10, 2.5, 10);
+            
+            const boxArray = [box, box2, box3];
+
+            const boxMaterial = new BABYLON.StandardMaterial('boxMat');
+            boxMaterial.diffuseColor = new BABYLON.Color3.Blue();
+            
+            const emissiveBoxMat = new BABYLON.StandardMaterial('emissiveMat');
+            emissiveBoxMat.emissiveColor = new BABYLON.Color3.Yellow();
 
             
+
+            const mcTexture = new BABYLON.StandardMaterial('minecraftMat');
+            mcTexture.diffuseTexture = new BABYLON.Texture("https://www.babylonjs-playground.com/textures/bloc.jpg");
+
+            for (let i = 0; i < boxArray.length; i++){
+                boxArray[i].material = mcTexture;
+            }
+
+            const grassTexture = new BABYLON.StandardMaterial('grassMat');
+            grassTexture.diffuseTexture = new BABYLON.Texture("https://www.babylonjs-playground.com/textures/grass.jpg");
+
+            const ground = BABYLON.MeshBuilder.CreateGround('ground', {width:50, height:50});
+            const groundMat = new BABYLON.StandardMaterial('groundMat');
+            groundMat.diffuseColor = new BABYLON.Color3.Green();
+
+            ground.material = grassTexture;
 
             const camera = new BABYLON.ArcRotateCamera("camera", -Math.PI / 2, Math.PI / 2.5, 15, new BABYLON.Vector3(0, 0, 0));
             camera.attachControl(canvas, true);
