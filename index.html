@@ -121,9 +121,23 @@
 
         const createScene = function(){
             const scene = new BABYLON.Scene(engine);
+
+            blockFaces = []
+            blockFaces[0] = new BABYLON.Vector4(0.5, 0.0, 0.75, 1.0); // rear
+            blockFaces[1] = new BABYLON.Vector4(0.0, 0.0, 0.25, 1.0); // front
+            blockFaces[2] = new BABYLON.Vector4(0.25, 0, 0.5, 1.0); // right
+            blockFaces[3] = new BABYLON.Vector4(0.75, 0, 1.0, 1.0); // left
+            blockFaces[4] = new BABYLON.Vector4(0, 1, 0, 1); // top
             
-            const box = BABYLON.MeshBuilder.CreateBox("box", {size: 5});
+            const mcTexture = new BABYLON.StandardMaterial('minecraftMat');
+            mcTexture.diffuseTexture = new BABYLON.Texture("https://www.babylonjs-playground.com/textures/bloc.jpg");
+
+            const grassTexture = new BABYLON.StandardMaterial('grassMat');
+            grassTexture.diffuseTexture = new BABYLON.Texture("https://www.babylonjs-playground.com/textures/grass.jpg");
+
+            const box = BABYLON.MeshBuilder.CreateBox("box", {size: 5, faceUV:blockFaces, wrap:true});
             box.position = new BABYLON.Vector3(-10, 2.5, 10);
+            box.material = mcTexture;
             // scene.actionManager = new BABYLON.ActionManager(scene);             // listen to user input
             //     scene.actionManager.registerAction(
             //         new BABYLON.ExecuteCodeAction({ trigger: BABYLON.ActionManager.OnKeyUpTrigger, paramater: " "},
@@ -135,11 +149,13 @@
             //     );
             // const sound = new BABYLON.Sound('sound', '<url to sound>', scene);
             // sound.play();
-            const box2 = BABYLON.MeshBuilder.CreateBox('box2', {size:5});
+            const box2 = BABYLON.MeshBuilder.CreateBox('box2', {size:5, faceUV:blockFaces, wrap:true});
             box2.position = new BABYLON.Vector3(0, 2.5, 10);
+            box2.material = mcTexture;
 
-            const box3 = BABYLON.MeshBuilder.CreateBox('box3', {size:5});
+            const box3 = BABYLON.MeshBuilder.CreateBox('box3', {size:5, faceUV:blockFaces, wrap:true});
             box3.position = new BABYLON.Vector3(10, 2.5, 10);
+            box3.material = mcTexture;
             
             const boxArray = [box, box2, box3];
 
@@ -149,17 +165,13 @@
             const emissiveBoxMat = new BABYLON.StandardMaterial('emissiveMat');
             emissiveBoxMat.emissiveColor = new BABYLON.Color3.Yellow();
 
+           
+            //const combinedMCTexture = BABYLON.Mesh.MergeMeshes([box]);
             
+            // for (let i = 0; i < boxArray.length; i++){
+            //     boxArray[i].material = mcTexture;
+            // }
 
-            const mcTexture = new BABYLON.StandardMaterial('minecraftMat');
-            mcTexture.diffuseTexture = new BABYLON.Texture("https://www.babylonjs-playground.com/textures/bloc.jpg");
-
-            for (let i = 0; i < boxArray.length; i++){
-                boxArray[i].material = mcTexture;
-            }
-
-            const grassTexture = new BABYLON.StandardMaterial('grassMat');
-            grassTexture.diffuseTexture = new BABYLON.Texture("https://www.babylonjs-playground.com/textures/grass.jpg");
 
             const ground = BABYLON.MeshBuilder.CreateGround('ground', {width:50, height:50});
             const groundMat = new BABYLON.StandardMaterial('groundMat');
